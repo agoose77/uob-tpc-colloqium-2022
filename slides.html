@@ -13,9 +13,6 @@
         :root {
             --r-heading1-size: 2.0em;
             --r-main-font-size: 38px;
-            /*--r-heading2-size: 1.6em;*/
-            /*--r-heading3-size: 1.3em;*/
-            /*--r-heading4-size: 1em;*/
         }
 
         .emphasis {
@@ -35,7 +32,7 @@
         }
 
         .col-4 {
-            color: #A6E1FA
+            color: #87B6A7
         }
 
         .col-5 {
@@ -46,17 +43,6 @@
 <!--
 Energy-based Geometric Multi-Model Fitting
 
-Pros:
-
-* disambiguate inliers between models regularization
-* We argue that greedy maximization of inliers is a flawed criteria for detecting
-a model if data supports multiple models
-  - greedy clustering, e.g. J-linkage
-  - mean-shift [6] to identify the modes in this Hough space.
-  - It is easy to see that this approach also greedily maximizes the number of inliers
-
-* functional - type of function
-* smoothness types (see new papers)
 
 Our work is about
 how to effectively optimize two such regularizers: a preference for fewer labels in the solution, and a preference for
@@ -71,9 +57,22 @@ spatial smoothness.
                 <h1>Simultaneous Track Fitting & Finding with Energy Functionals</h1>
             </section>
             <section>
+                <h2>Track Fitting & Track Finding</h2>
+                <!--                TODO: image of coloured inliers-->
+                <p class="fragment">Track <b class="col-1">finding</b> is the problem of <u>identifying unique
+                    tracks</u> within a dataset<span class="fragment">, and <u>determining
+                    their set of inliers</u>.</span></p>
+                <!--                TODO: image of fit lines-->
+                <p class="fragment">Track <b class="col-2">fitting</b> involves <u>determining the variables</u> that
+                    describe the observed inliers.</p>
+
+                <aside class="notes">
+                    <p>Track fitting and track finding are commonly grouped together under tracking, and comprise the
+                        early stage of an analysis. Despite this grouping, they are conceptually distinct problems:</p>
+                </aside>
+            </section>
+            <section>
                 <h2>Existing Approaches</h2>
-                <p class="fragment">Track finding is a well-explored problem.</p>
-                <p class="fragment">The most common methods are <span class="col-3">greedy</span>.</p>
 
                 <div style="display:flex">
                     <figure class="fragment" style="flex:100%"><img src="image/hough.svg" width="100%"
@@ -125,10 +124,15 @@ spatial smoothness.
         <section>
             <section>
                 <h2>The Uncapacitated Facility Location (UFL) Problem</h2>
-                <p class="fragment">A new company wants to sell goods, and needs to build facilities to meet demand.</p>
-                <p class="fragment">Facilities need to be <span class="col-3">close to consumers</span> to minimise
-                    transportation costs.</p>
-                <p class="fragment">Facilities are <span class="col-3">expensive to run</span>.</p>
+                <ul style="list-style:numbered">
+                    <li class="fragment">A manufacturing company wants to <span class="col-1">minimise costs</span>.
+                    </li>
+                    <li class="fragment">Delivery is expensive, so facilities need to be <span class="col-2">close to consumers</span>.
+                    </li>
+                    <li class="fragment">Facilities are expensive, so <span
+                            class="col-3">few as possible</span> should be run.
+                    </li>
+                </ul>
 
                 <aside class="notes">
                     <p>What we are trying to solve here is also known as the facility location problem.</p>
@@ -141,21 +145,20 @@ spatial smoothness.
                 <p>
                     The cost $E$ to run the business is
                     $$
-                    E = \sum_f \htmlData{fragment-index=0}{\htmlClass{col-1}{O_f}} +
-                    \sum_{fc} \htmlData{fragment-index=1}{\htmlClass{col-2}{T_{fc}}}
-                    \htmlData{fragment-index=2}{\htmlClass{col-5}{D_{fc}}}\,,
+                    \htmlData{fragment-index=1}{E = \sum_f \htmlClass{col-1}{O_f}}
+                    \htmlData{fragment-index=2}{+\sum_{fc} \htmlClass{col-2}{T_{fc}}}
+                    \htmlData{fragment-index=3}{\htmlClass{col-5}{D_{fc}}\,,}
                     $$
-                    where
                 </p>
-                <ul>
-                    <li class="fragment" data-fragment-index="0">$\htmlClass{col-1}{O_f}$ is the overhead cost to run
+                <ul style="list-style: none">
+                    <li class="fragment" data-fragment-index="1">$\htmlClass{col-1}{O_f}$ is the overhead cost to run
                         the facility.
                     </li>
-                    <li class="fragment" data-fragment-index="1">$\htmlClass{col-2}{T_{fc}}$ is the transportation cost
+                    <li class="fragment" data-fragment-index="2">$\htmlClass{col-2}{T_{fc}}$ is the transportation cost
                         to move goods to the
                         consumer.
                     </li>
-                    <li class="fragment" data-fragment-index="2">$\htmlClass{col-5}{D_{fc}}$ is the demand from a
+                    <li class="fragment" data-fragment-index="3">$\htmlClass{col-5}{D_{fc}}$ is the demand from a
                         customer satisfied by the facility.
                     </li>
                 </ul>
@@ -164,20 +167,25 @@ spatial smoothness.
 
             <section>
                 <h2>UFL in Particle Tracking</h2>
-                <p>
+
+                <p class="fragment" data-fragment-index="0">
                     $$
-                    E = \htmlData{fragment-index=0}{\underbrace{\sum_f \htmlClass{col-1}{O_f}\delta_f}_\text{Label
-                    cost}} +
-                    \htmlData{fragment-index=1}{\underbrace{\sum_{c}\htmlClass{col-2}{T_{c}}}_\text{Data cost}}\,,
+                    E = \underbrace{\sum_f \htmlClass{col-1}{O_f}\delta_f}_\text{Label
+                    cost}
+                    \htmlData{fragment-index=1}{+\underbrace{\sum_{c}\htmlClass{col-2}{T_{c}}}_\text{Data cost}\,,}
                     $$
                 </p>
 
-                <span class="fragment" data-fragment-index="3">where $\htmlClass{col-2}{T_{c}}$ is the cost ascribed to the
-                    observable $c$ by its currently labelled model (facility).</span>
+                <span class="fragment" data-fragment-index="3">where $\htmlClass{col-2}{T_{c}}$ is the cost of
+                    observable $c$ under its current label.</span>
 
                 <aside class="notes">
+                    <p>To map the UFL problem onto track fitting in TPCs, we need to redefine our variables.
+                        In some cases, we might wish to fit several different kinds of phenomena. Each of these
+                        phenomena may be described by a unique likelihood function, which we will refer to as a "model".
+                    </p>
                     <ul>
-                        <li>In our problem, the "facility" is a potential track model</li>
+                        <li>In our problem, the "facility" is a track model</li>
                         <li>The "client" is a measurement (i.e. TPC charge cluster)</li>
                         <li>The "demand" corresponds to the delta function, i.e. does this model describe this
                             measurement?
@@ -187,6 +195,12 @@ spatial smoothness.
                         </li>
                     </ul>
                     <p>
+                        This final expression is formulated in such a way as to hide the semantics of computing this
+                        cost.
+                        Instead, I want to focus on the relationships.
+
+                        The first term penalises overfitting our data with too many labels (models).
+                        The second term ascribes a goodness-of-fit like energy to the labelling.
                         It can be seen that minimising this cost function involves finding the optimum number of
                         facilities (models) such that we neither underfit( and poorly describe our measurements) nor
                         overfit our data.
@@ -197,12 +211,14 @@ spatial smoothness.
                 <h2>Smoothness Prior</h2>
                 We can require that neighbouring observations <i>have similar labels</i> by introducing a <span
                     class="col-3">smoothness</span> term:
-                $$
-                \htmlClass{fuk}{E} = \htmlData{fragment-index=0}{\underbrace{\sum_f
-                \htmlClass{col-1}{O_f}\delta_f}_\text{Label cost}} +
-                \htmlData{fragment-index=1}{\underbrace{\sum_{c}\htmlClass{col-2}{T_{c}}}_\text{Data cost}} +
-                \htmlData{fragment-index=2}{\underbrace{\sum_{cc'}\htmlClass{col-4}{S_{cc'}}}_\text{Smooth cost}} \,,
-                $$
+                <div class="fragment">
+                    $$
+                    \htmlClass{fuk}{E} = \underbrace{\sum_f
+                    \htmlClass{col-1}{O_f}\delta_f}_\text{Label cost}
+                    +\underbrace{\sum_{c}\htmlClass{col-2}{T_{c}}}_\text{Data cost}
+                    \htmlClass{fragment}{+\underbrace{\sum_{cc'}\htmlClass{col-4}{S_{cc'}}}_\text{Smooth cost} \,.}
+                    $$
+                </div>
                 <aside class="notes">
                     We can extend this energy description even further. In many classes of problems, groups of
                     observations are known a priori to be correlated. It follows that such observations should have
