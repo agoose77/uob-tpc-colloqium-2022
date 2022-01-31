@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/black.css">
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/math/math.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+
+    <style>
+        :root {
+            --r-heading1-size: 2.0em;
+            --r-main-font-size: 38px;
+            /*--r-heading2-size: 1.6em;*/
+            /*--r-heading3-size: 1.3em;*/
+            /*--r-heading4-size: 1em;*/
+        }
+
+        .emphasis {
+            color: #FBC004;
+        }
+
+        .col-1 {
+            color: #0E6BA8
+        }
+
+        .col-2 {
+            color: #FF715B
+        }
+
+        .col-3 {
+            color: #FBC004
+        }
+
+        .col-4 {
+            color: #A6E1FA
+        }
+
+        .col-5 {
+            color: #9381FF
+        }
+    </style>
+</head>
+<!--
+Energy-based Geometric Multi-Model Fitting
+
+Pros:
+
+* disambiguate inliers between models regularization
+* We argue that greedy maximization of inliers is a flawed criteria for detecting
+a model if data supports multiple models
+  - greedy clustering, e.g. J-linkage
+  - mean-shift [6] to identify the modes in this Hough space.
+  - It is easy to see that this approach also greedily maximizes the number of inliers
+
+* functional - type of function
+* smoothness types (see new papers)
+
+Our work is about
+how to effectively optimize two such regularizers: a preference for fewer labels in the solution, and a preference for
+spatial smoothness.
+-->
+<body>
+<div class="reveal">
+    <div class="slides">
+        <!-- ERF Problem-->
+        <section>
+            <section>
+                <h1>Simultaneous Track Fitting & Finding with Energy Functionals</h1>
+            </section>
+            <section>
+                <h2>Existing Approaches</h2>
+                <p class="fragment">Track finding is a well-explored problem.</p>
+                <p class="fragment">The most common methods are <span class="col-3">greedy</span>.</p>
+
+                <div style="display:flex">
+                    <figure class="fragment" style="flex:100%"><img src="image/hough.svg" width="100%"
+                                                                    alt="Hough Transform Voting Space.">
+                        <figcaption>Hough Transform</figcaption>
+                    </figure>
+                    <figure class="fragment" style="flex:100%"><img src="image/ransac.svg" width="100%"
+                                                                    alt="Hough Transform Voting Space.">
+                        <figcaption>RANSAC</figcaption>
+                    </figure>
+
+                    <aside class="notes">
+                        <p>The Hough Transform involves choosing a parameterisation for the track model such that all
+                            inliers have the same parameters. Possible model parameters are generated for each data
+                            point,
+                            and the corresponding bin in the parameter-space histogram is incremented. The most
+                            frequently
+                            observed parameters are taken as the model with the most support.</p>
+
+                        <p>RANSAC is an iterative method that first generates random model parameters.
+                            The algorithm involves iteratively fitting the parameters to the set of inliers, and then
+                            redetermining the inliers that pass a threshold. </p>
+                    </aside>
+                </div>
+            </section>
+            <section>
+                <p>These methods are powerful<span class="fragment">, but suffer from <span
+                        class="col-3">greediness</span></span></p>
+                <div class="r-stack">
+                    <img class="fragment" src="https://placekitten.com/450/300" width="450" height="300"> <!-- TODO -->
+                    <img class="fragment" src="https://placekitten.com/300/450" width="300" height="450"> <!-- TODO -->
+                    <img class="fragment" src="https://placekitten.com/400/400" width="400" height="400"> <!-- TODO -->
+                </div>
+
+                <aside class="notes">
+                    <p>The aforementioned RANSAC and Hough Transform methods are both intrinsically greedy. In order to
+                        generalise to multiple models, these methods are usually performed iteratively until a
+                        termination criterion (e.g. number of inliers) is met. </p>
+                    <p>Here is an example of RANSAC being performed iteratively.
+                        It can be seen that the set of inliers found by RANSAC includes a mix of points from both
+                        models. </p>
+                    <p>The iterative algorithm maximises the inliers for the first model found. As such, the found
+                        models are not treated on an equal basis.</p>
+                </aside>
+            </section>
+        </section>
+
+        <!-- UFL Problem-->
+        <section>
+            <section>
+                <h2>The Uncapacitated Facility Location (UFL) Problem</h2>
+                <p class="fragment">A new company wants to sell goods, and needs to build facilities to meet demand.</p>
+                <p class="fragment">Facilities need to be <span class="col-3">close to consumers</span> to minimise
+                    transportation costs.</p>
+                <p class="fragment">Facilities are <span class="col-3">expensive to run</span>.</p>
+
+                <aside class="notes">
+                    <p>What we are trying to solve here is also known as the facility location problem.</p>
+                    <p>Let's introduce the FLP in terms of a business analog.</p>
+                </aside>
+            </section>
+
+
+            <section>
+                <p>
+                    The cost $E$ to run the business is
+                    $$
+                    E = \sum_f \htmlData{fragment-index=0}{\htmlClass{col-1}{O_f}} +
+                    \sum_{fc} \htmlData{fragment-index=1}{\htmlClass{col-2}{T_{fc}}}
+                    \htmlData{fragment-index=2}{\htmlClass{col-5}{D_{fc}}}\,,
+                    $$
+                    where
+                </p>
+                <ul>
+                    <li class="fragment" data-fragment-index="0">$\htmlClass{col-1}{O_f}$ is the overhead cost to run
+                        the facility.
+                    </li>
+                    <li class="fragment" data-fragment-index="1">$\htmlClass{col-2}{T_{fc}}$ is the transportation cost
+                        to move goods to the
+                        consumer.
+                    </li>
+                    <li class="fragment" data-fragment-index="2">$\htmlClass{col-5}{D_{fc}}$ is the demand from a
+                        customer satisfied by the facility.
+                    </li>
+                </ul>
+            </section>
+
+
+            <section>
+                <h2>UFL in Particle Tracking</h2>
+                <p>
+                    $$
+                    E = \htmlData{fragment-index=0}{\underbrace{\sum_f \htmlClass{col-1}{O_f}\delta_f}_\text{Label
+                    cost}} +
+                    \htmlData{fragment-index=1}{\underbrace{\sum_{c}\htmlClass{col-2}{T_{c}}}_\text{Data cost}}\,,
+                    $$
+                </p>
+
+                <span class="fragment" data-fragment-index="3">where $\htmlClass{col-2}{T_{c}}$ is the cost ascribed to the
+                    observable $c$ by its currently labelled model (facility).</span>
+
+                <aside class="notes">
+                    <ul>
+                        <li>In our problem, the "facility" is a potential track model</li>
+                        <li>The "client" is a measurement (i.e. TPC charge cluster)</li>
+                        <li>The "demand" corresponds to the delta function, i.e. does this model describe this
+                            measurement?
+                        </li>
+                        <li>The "transport cost" corresponds to a cost function that describes how well the model fits
+                            the measurement, such as the negative log likelihood
+                        </li>
+                    </ul>
+                    <p>
+                        It can be seen that minimising this cost function involves finding the optimum number of
+                        facilities (models) such that we neither underfit( and poorly describe our measurements) nor
+                        overfit our data.
+                    </p>
+                </aside>
+            </section>
+            <section>
+                <h2>Smoothness Prior</h2>
+                We can require that neighbouring observations <i>have similar labels</i> by introducing a <span
+                    class="col-3">smoothness</span> term:
+                $$
+                \htmlClass{fuk}{E} = \htmlData{fragment-index=0}{\underbrace{\sum_f
+                \htmlClass{col-1}{O_f}\delta_f}_\text{Label cost}} +
+                \htmlData{fragment-index=1}{\underbrace{\sum_{c}\htmlClass{col-2}{T_{c}}}_\text{Data cost}} +
+                \htmlData{fragment-index=2}{\underbrace{\sum_{cc'}\htmlClass{col-4}{S_{cc'}}}_\text{Smooth cost}} \,,
+                $$
+                <aside class="notes">
+                    We can extend this energy description even further. In many classes of problems, groups of
+                    observations are known a priori to be correlated. It follows that such observations should have
+                    similar labels.
+                    This can be modeled by a smoothness energy, that imposes a cost for unalike labels between
+                    neighbouring observations.
+                </aside>
+            </section>
+
+
+        </section>
+    </div>
+</div>
+<script>
+    // Save the initial data-fragment-index values for initial DOM content
+    // This is needed to later restore these values, as reveal overwrites them
+    function saveInitialFragments() {
+        document.querySelectorAll('[data-fragment-index]').forEach((elem) => {
+            elem.setAttribute("data-original-fragment-index", elem.getAttribute("data-fragment-index"))
+        });
+
+    }
+
+    saveInitialFragments();
+
+    Reveal.initialize({
+        plugins: [RevealMath.KaTeX, RevealMarkdown, RevealNotes],
+
+        katex: {
+            trust: true,
+            strict: false
+        },
+
+        // Display presentation control arrows
+        controls: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Alternatively, you can provide a function that returns the slide
+        // number for the current slide. The function should take in a slide
+        // object and return an array with one string [slideNumber] or
+        // three strings [n1,delimiter,n2]. See #formatSlideNumber().
+        slideNumber: true,
+
+        // Can be used to limit the contexts in which the slide number appears
+        // - "all":      Always show the slide number
+        // - "print":    Only when printing to PDF
+        // - "speaker":  Only in the speaker view
+        showSlideNumber: 'all',
+
+        // Use 1 based indexing for # links to match slide number (default is zero
+        // based)
+        hashOneBasedIndex: true,
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history.  Implies `hash: true`
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+    });
+
+    function tagMathFragments() {
+        // Add "fragment" class to math nodes
+        document.querySelectorAll('[data-fragment-index]:not(.fragment)').forEach((elem) => {
+            elem.classList.add("fragment");
+        })
+
+        // Restore original "data-fragment-index" attribute to account for math nodes
+        document.querySelectorAll('[data-fragment-index][data-original-fragment-index]').forEach((elem) => {
+            elem.removeAttribute("data-fragment-index");
+            // Restore original
+            const originalFragmentIndex = elem.getAttribute("data-original-fragment-index");
+            if (originalFragmentIndex !== null) {
+                elem.setAttribute("data-fragment-index", originalFragmentIndex)
+            }
+        })
+
+        Reveal.sync();
+    }
+
+    window.addEventListener('load', tagMathFragments, false);
+
+</script>
+</body>
+</html>

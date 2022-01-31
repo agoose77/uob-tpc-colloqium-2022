@@ -1,0 +1,33 @@
+[project]
+name = ""
+version = ""
+description = ""
+authors = [
+    {name = "Angus Hollands", email = "goosey15@gmail.com"},
+]
+dependencies = [
+    "jupyterlab>=3.2.8",
+    "matplotlib>=3.5.1",
+    "awkward>=1.7.0",
+    "numpy>=1.22.1",
+    "mplhep>=0.3.20",
+    "ipyvolume==0.6.0a10",
+    "sympy>=1.9",
+    "jax[cpu]>=0.2.27",
+    "vector>=0.8.4",
+    "jlab-enhanced-cell-toolbar>=3.4.2",
+    "voila>=0.3.1",
+    "sklearn>=0.0",
+]
+requires-python = ">=3.9"
+license = {text = "MIT"}
+
+[project.urls]
+homepage = ""
+
+[tool]
+[tool.pdm]
+
+[build-system]
+requires = ["pdm-pep517"]
+build-backend = "pdm.pep517.api"
