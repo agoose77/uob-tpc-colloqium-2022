@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="dist/reveal.css">
-    <link rel="stylesheet" href="dist/theme/black.css">
+    <link rel="stylesheet" href="reveal/dist/reveal.css">
+    <link rel="stylesheet" href="reveal/dist/theme/black.css">
 
-    <script src="dist/reveal.js"></script>
-    <script src="plugin/math/math.js"></script>
-    <script src="plugin/notes/notes.js"></script>
-    <script src="plugin/markdown/markdown.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="reveal/dist/reveal.js"></script>
+    <script src="reveal/plugin/math/math.js"></script>
+    <script src="reveal/plugin/notes/notes.js"></script>
+    <script src="reveal/plugin/markdown/markdown.js"></script>
+    <script src="tailwind/index.js"></script>
+
+    <script>
+        tailwind.config = {
+            important: true,
+        }
+    </script>
 
     <style>
         :root {
@@ -263,72 +269,104 @@
             <section>
                 <h3>Line Fitting</h3>
                 <div class="flex">
-                <div class="r-stack w-1/2">
-                    <figure class="fragment no-transition-delay fade-out" data-fragment-index="0" style="flex:100%"><img src="image/cost-energy-0.png">
-                        <figcaption>Iteration 1</figcaption>
-                    </figure>
-                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="0" style="flex:100%"><img src="image/cost-energy-1.png">
-                        <figcaption>Iteration 2</figcaption>
-                    </figure>
-                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="1" style="flex:100%"><img src="image/cost-energy-2.png">
-                        <figcaption>Iteration 3</figcaption>
-                    </figure>
-                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="2" style="flex:100%"><img src="image/cost-energy-3.png">
-                        <figcaption>Iteration 4</figcaption>
-                    </figure>
-                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="3" style="flex:100%"><img src="image/cost-energy-4.png">
-                        <figcaption>Iteration 5</figcaption>
-                    </figure>
-                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="4" style="flex:100%"><img src="image/cost-energy-5.png">
-                        <figcaption>Iteration 6</figcaption>
-                    </figure>
-                </div>
+                    <div class="r-stack w-1/2">
+                        <img src="image/cost-energy-0.png" class="fragment no-transition-delay fade-out flex-1 w-full "
+                             data-fragment-index="0">
 
-                <div class="r-stack w-1/2">
-                    <figure class="fragment no-transition-delay fade-out" data-fragment-index="0" style="flex:100%"><img src="image/pearl-iteration-0.png">
-                        <figcaption>Iteration 1</figcaption>
-                    </figure>
-                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="0" style="flex:100%"><img src="image/pearl-iteration-1.png">
-                        <figcaption>Iteration 2</figcaption>
-                    </figure>
-                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="1" style="flex:100%"><img src="image/pearl-iteration-2.png">
-                        <figcaption>Iteration 3</figcaption>
-                    </figure>
-                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="2" style="flex:100%"><img src="image/pearl-iteration-3.png">
-                        <figcaption>Iteration 4</figcaption>
-                    </figure>
-                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="3" style="flex:100%"><img src="image/pearl-iteration-4.png">
-                        <figcaption>Iteration 5</figcaption>
-                    </figure>
-                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="4" style="flex:100%"><img src="image/pearl-iteration-5.png">
-                        <figcaption>Iteration 6</figcaption>
-                    </figure>
+
+                        <img src="image/cost-energy-1.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                             data-fragment-index="0">
+
+
+                        <img src="image/cost-energy-2.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                             data-fragment-index="1">
+
+
+                        <img src="image/cost-energy-3.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                             data-fragment-index="2">
+
+
+                        <img src="image/cost-energy-4.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                             data-fragment-index="3">
+
+
+                        <img src="image/cost-energy-5.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                             data-fragment-index="4">
+
+
+                    </div>
+
+                    <div class="r-stack w-1/2">
+                        <img src="image/pearl-iteration-0.png" class="fragment no-transition-delay fade-out flex-1 w-full "
+                             data-fragment-index="0">
+
+                        <img src="image/pearl-iteration-1.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                             data-fragment-index="0">
+
+
+                        <img src="image/pearl-iteration-2.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                             data-fragment-index="1">
+
+
+                        <img src="image/pearl-iteration-3.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                             data-fragment-index="2">
+
+
+                        <img src="image/pearl-iteration-4.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                             data-fragment-index="3">
+
+
+                        <img src="image/pearl-iteration-5.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                             data-fragment-index="4">
+
+                    </div>
                 </div>
+                <div class="r-stack">
+                    <figcaption class="fragment no-transition-delay fade-out" data-fragment-index="0">Iteration
+                        1
+                    </figcaption>
+                    <figcaption class="fragment no-transition-delay fade-in-then-out" data-fragment-index="0">Iteration
+                        2
+                    </figcaption>
+                    <figcaption class="fragment no-transition-delay fade-in-then-out" data-fragment-index="1">Iteration
+                        3
+                    </figcaption>
+                    <figcaption class="fragment no-transition-delay fade-in-then-out" data-fragment-index="2">Iteration
+                        4
+                    </figcaption>
+                    <figcaption class="fragment no-transition-delay fade-in-then-out" data-fragment-index="3">Iteration
+                        5
+                    </figcaption>
+                    <figcaption class="fragment no-transition-delay fade-in-then-out" data-fragment-index="4">Iteration
+                        6
+                    </figcaption>
+
                 </div>
             </section>
             <section>
                 <h3>Constrained PEARL</h3>
                 <!--                TODO: show example of bad PEARL fit in scattering reaction-->
-<!--                TODO: we introduce correlations (constraints) between labels-->
+                <!--                TODO: we introduce correlations (constraints) between labels-->
                 <ul>
                     <li>GCO to compute new labelling</li>
                     <li>SciPy to perform constrained optimisation</li>
                     <li>Jax to evaluate Jacobian + Hessian</li>
                 </ul>
                 <aside class="notes">
-<!--                    <p>In the subsequent examples, I'm going to show data from an elastic scattering reaction.-->
-<!--                        In these events, it is not uncommon for the carbon scatter to stop close to the interaction-->
-<!--                        vertex, such that there are not enough inliers to support the introduction of a new model.</p>-->
-<!--                    <p>We do not want the minimizer to treat these as inliers of another model. It will be able to do-->
-<!--                        this in the extreme cases with an outlier model, but compatible models may be skewed in order to-->
-<!--                        prevent these observations from becoming outliers.</p>-->
+                    <!--                    <p>In the subsequent examples, I'm going to show data from an elastic scattering reaction.-->
+                    <!--                        In these events, it is not uncommon for the carbon scatter to stop close to the interaction-->
+                    <!--                        vertex, such that there are not enough inliers to support the introduction of a new model.</p>-->
+                    <!--                    <p>We do not want the minimizer to treat these as inliers of another model. It will be able to do-->
+                    <!--                        this in the extreme cases with an outlier model, but compatible models may be skewed in order to-->
+                    <!--                        prevent these observations from becoming outliers.</p>-->
                     <p>The problem is that we have too low level a description of our model - whilst a scattering
                         reaction can be decomposed into separate tracks, there are additional requirements that have to
                         be met in order for three random directions to form a scatter.</p>
-<!--                    <p>We can introduce constraints during our optimisation step to restrict the fit to more physical-->
-<!--                        solutions. This hierarchical fit does not extend into the labelling phase. There are-->
-<!--                        heirarchical extensions of PEARL but that's off-topic!</p>-->
-                    <p>The following analysis looks like K-means, except we retain the label cost (only with an upper bound of labels)</p>
+                    <!--                    <p>We can introduce constraints during our optimisation step to restrict the fit to more physical-->
+                    <!--                        solutions. This hierarchical fit does not extend into the labelling phase. There are-->
+                    <!--                        heirarchical extensions of PEARL but that's off-topic!</p>-->
+                    <p>The following analysis looks like K-means, except we retain the label cost (only with an upper
+                        bound of labels)</p>
                 </aside>
             </section>
         </section>
