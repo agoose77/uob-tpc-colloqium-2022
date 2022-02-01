@@ -77,13 +77,13 @@
             <section>
                 <h2>Existing Approaches</h2>
 
-                <div style="display:flex">
-                    <figure class="fragment" style="flex:100%"><img src="image/hough.svg" width="100%"
-                                                                    alt="Hough Transform Voting Space.">
+                <div class="flex">
+                    <figure class="fragment flex-1"><img class="w-full" src="image/hough.svg"
+                                                         alt="Hough Transform Voting Space.">
                         <figcaption>Hough Transform</figcaption>
                     </figure>
-                    <figure class="fragment" style="flex:100%"><img src="image/ransac.svg" width="100%"
-                                                                    alt="Hough Transform Voting Space.">
+                    <figure class="fragment flex-1"><img class="w-full" src="image/ransac.svg"
+                                                         alt="Hough Transform Voting Space.">
                         <figcaption>RANSAC</figcaption>
                     </figure>
 
@@ -128,7 +128,7 @@
         <section>
             <section>
                 <h2>The Uncapacitated Facility Location (UFL) Problem</h2>
-                <ul style="list-style:numbered">
+                <ul class="list-decimal">
                     <li class="fragment">A manufacturing company wants to <span class="col-1">minimise costs</span>.
                     </li>
                     <li class="fragment">Delivery is expensive, so facilities need to be <span class="col-2">close to consumers</span>.
@@ -154,7 +154,7 @@
                     \htmlData{fragment-index=3}{\htmlClass{col-5}{D_{fc}}\,,}
                     $$
                 </p>
-                <ul style="list-style: none">
+                <ul class="list-none">
                     <li class="fragment" data-fragment-index="1">$\htmlClass{col-1}{O_f}$ is the overhead cost to run
                         the facility.
                     </li>
@@ -255,7 +255,7 @@
             <section>
                 <h3>PEARL Algorithm</h3>
                 <!--                TODO: use PEARL iterative image-->
-                <ul style="list-style: numbered">
+                <ul class="list-decimal">
                     <li><b class="col-1">propose</b> initial models $\mathcal{L}_0$ by random samples (as in RANSAC)
                     </li>
                     <li><b class="col-2">label</b> observations given models $\mathcal{L}_t$</li>
@@ -274,49 +274,60 @@
                              data-fragment-index="0">
 
 
-                        <img src="image/cost-energy-1.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                        <img src="image/cost-energy-1.png"
+                             class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
                              data-fragment-index="0">
 
 
-                        <img src="image/cost-energy-2.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                        <img src="image/cost-energy-2.png"
+                             class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
                              data-fragment-index="1">
 
 
-                        <img src="image/cost-energy-3.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                        <img src="image/cost-energy-3.png"
+                             class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
                              data-fragment-index="2">
 
 
-                        <img src="image/cost-energy-4.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                        <img src="image/cost-energy-4.png"
+                             class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
                              data-fragment-index="3">
 
 
-                        <img src="image/cost-energy-5.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                        <img src="image/cost-energy-5.png"
+                             class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
                              data-fragment-index="4">
 
 
                     </div>
 
                     <div class="r-stack w-1/2">
-                        <img src="image/pearl-iteration-0.png" class="fragment no-transition-delay fade-out flex-1 w-full "
+                        <img src="image/pearl-iteration-0.png"
+                             class="fragment no-transition-delay fade-out flex-1 w-full "
                              data-fragment-index="0">
 
-                        <img src="image/pearl-iteration-1.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                        <img src="image/pearl-iteration-1.png"
+                             class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
                              data-fragment-index="0">
 
 
-                        <img src="image/pearl-iteration-2.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                        <img src="image/pearl-iteration-2.png"
+                             class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
                              data-fragment-index="1">
 
 
-                        <img src="image/pearl-iteration-3.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                        <img src="image/pearl-iteration-3.png"
+                             class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
                              data-fragment-index="2">
 
 
-                        <img src="image/pearl-iteration-4.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                        <img src="image/pearl-iteration-4.png"
+                             class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
                              data-fragment-index="3">
 
 
-                        <img src="image/pearl-iteration-5.png" class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                        <img src="image/pearl-iteration-5.png"
+                             class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
                              data-fragment-index="4">
 
                     </div>
