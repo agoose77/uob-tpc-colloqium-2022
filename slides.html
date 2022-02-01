@@ -8,15 +8,14 @@
     <script src="plugin/math/math.js"></script>
     <script src="plugin/notes/notes.js"></script>
     <script src="plugin/markdown/markdown.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
         :root {
             --r-heading1-size: 2.0em;
+            --r-heading2-size: 1.6em;
+            --r-heading3-size: 1.3em;
             --r-main-font-size: 38px;
-        }
-
-        .emphasis {
-            color: #FBC004;
         }
 
         .col-1 {
@@ -38,24 +37,22 @@
         .col-5 {
             color: #9381FF
         }
+
+        .no-transition-delay {
+            transition-duration: 0s;
+        }
+
     </style>
 </head>
-<!--
-Energy-based Geometric Multi-Model Fitting
 
-
-Our work is about
-how to effectively optimize two such regularizers: a preference for fewer labels in the solution, and a preference for
-spatial smoothness.
--->
 <body>
 <div class="reveal">
     <div class="slides">
         <!-- ERF Problem-->
         <section>
-            <section>
-                <h1>Simultaneous Track Fitting & Finding with Energy Functionals</h1>
-            </section>
+            <h1>Simultaneous Track Fitting & Finding with Energy Functionals</h1>
+        </section>
+        <section>
             <section>
                 <h2>Track Fitting & Track Finding</h2>
                 <!--                TODO: image of coloured inliers-->
@@ -95,6 +92,7 @@ spatial smoothness.
                         <p>RANSAC is an iterative method that first generates random model parameters.
                             The algorithm involves iteratively fitting the parameters to the set of inliers, and then
                             redetermining the inliers that pass a threshold. </p>
+                        <!--                        TODO: show thresholding from http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.381.2434&rep=rep1&type=pdf-->
                     </aside>
                 </div>
             </section>
@@ -113,7 +111,7 @@ spatial smoothness.
                         termination criterion (e.g. number of inliers) is met. </p>
                     <p>Here is an example of RANSAC being performed iteratively.
                         It can be seen that the set of inliers found by RANSAC includes a mix of points from both
-                        models. </p>
+                        models. There are several points which admit multiple models</p>
                     <p>The iterative algorithm maximises the inliers for the first model found. As such, the found
                         models are not treated on an equal basis.</p>
                 </aside>
@@ -166,7 +164,7 @@ spatial smoothness.
 
 
             <section>
-                <h2>UFL in Particle Tracking</h2>
+                <h2>The UFL in Particle Tracking</h2>
 
                 <p class="fragment" data-fragment-index="0">
                     $$
@@ -211,24 +209,128 @@ spatial smoothness.
                 <h2>Smoothness Prior</h2>
                 We can require that neighbouring observations <i>have similar labels</i> by introducing a <span
                     class="col-3">smoothness</span> term:
-                <div class="fragment">
-                    $$
-                    \htmlClass{fuk}{E} = \underbrace{\sum_f
-                    \htmlClass{col-1}{O_f}\delta_f}_\text{Label cost}
-                    +\underbrace{\sum_{c}\htmlClass{col-2}{T_{c}}}_\text{Data cost}
-                    \htmlClass{fragment}{+\underbrace{\sum_{cc'}\htmlClass{col-4}{S_{cc'}}}_\text{Smooth cost} \,.}
-                    $$
-                </div>
+                $$
+                \htmlClass{fragment}{
+                E = \underbrace{\sum_f
+                \htmlClass{col-1}{O_f}\delta_f}_\text{Label cost}
+                +\underbrace{\sum_{c}\htmlClass{col-2}{T_{c}}}_\text{Data cost}
+                \htmlClass{fragment}{+\underbrace{\sum_{cc'}\htmlClass{col-4}{S_{cc'}}}_\text{Smooth cost} \,.}
+                }
+                $$
                 <aside class="notes">
-                    We can extend this energy description even further. In many classes of problems, groups of
+                    We can extend this energy description beyond the UFL. In many classes of problems, groups of
                     observations are known a priori to be correlated. It follows that such observations should have
                     similar labels.
                     This can be modeled by a smoothness energy, that imposes a cost for unalike labels between
                     neighbouring observations.
+                    The label cost and smoothness terms are known as regularisers.
                 </aside>
             </section>
+        </section>
+        <section>
+            <section><h2>Solving the Energy Functional</h2>
+                <!--                TODO: use images here?-->
+                <div class="r-stack">
+                    <p class="fragment fade-in-then-out" data-fragment-index="0">We need the <span class="col-2">model parameters</span>
+                        to compute the <span class="col-5">optimal labelling</span></p>
+                    <p class="fragment" data-fragment-index="1">We need the <span class="col-5">optimal labelling</span>
+                        to compute the <span class="col-2">model parameters</span></p>
+                </div>
+                <aside class="notes">
+                    <p>To minimize this energy for our observed data, you may have noticed that we need to evaluate
+                        the costs functions associated with each model (label) for each observable. But, to do this
+                        would require that we know the final model parameters. This is rather unhelpful, seeing as we
+                        are performing track finding as a precursory stage to fit the track parameters.</p>
+                    <p>Like most problems of this nature, we can use an iterative approximation. One such algorithm is
+                        the PEARL algorithm, which interleaves a labelling step and a fitting step to update data
+                        costs.</p>
+                </aside>
+            </section>
+            <section>
+                <h3>PEARL Algorithm</h3>
+                <!--                TODO: use PEARL iterative image-->
+                <ul style="list-style: numbered">
+                    <li><b class="col-1">propose</b> initial models $\mathcal{L}_0$ by random samples (as in RANSAC)
+                    </li>
+                    <li><b class="col-2">label</b> observations given models $\mathcal{L}_t$</li>
+                    <li><b class="col-3">re-estimate</b> model parameters to get $\mathcal{L}_t+1$, go to (2)</li>
+                </ul>
+                <aside class="notes">
+                    <p>The PEARL algorithm uses a particular method for re-labelling observations called
+                        alpha-expansion.</p>
+                </aside>
+            </section>
+            <section>
+                <h3>Line Fitting</h3>
+                <div class="flex">
+                <div class="r-stack w-1/2">
+                    <figure class="fragment no-transition-delay fade-out" data-fragment-index="0" style="flex:100%"><img src="image/cost-energy-0.png">
+                        <figcaption>Iteration 1</figcaption>
+                    </figure>
+                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="0" style="flex:100%"><img src="image/cost-energy-1.png">
+                        <figcaption>Iteration 2</figcaption>
+                    </figure>
+                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="1" style="flex:100%"><img src="image/cost-energy-2.png">
+                        <figcaption>Iteration 3</figcaption>
+                    </figure>
+                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="2" style="flex:100%"><img src="image/cost-energy-3.png">
+                        <figcaption>Iteration 4</figcaption>
+                    </figure>
+                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="3" style="flex:100%"><img src="image/cost-energy-4.png">
+                        <figcaption>Iteration 5</figcaption>
+                    </figure>
+                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="4" style="flex:100%"><img src="image/cost-energy-5.png">
+                        <figcaption>Iteration 6</figcaption>
+                    </figure>
+                </div>
 
-
+                <div class="r-stack w-1/2">
+                    <figure class="fragment no-transition-delay fade-out" data-fragment-index="0" style="flex:100%"><img src="image/pearl-iteration-0.png">
+                        <figcaption>Iteration 1</figcaption>
+                    </figure>
+                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="0" style="flex:100%"><img src="image/pearl-iteration-1.png">
+                        <figcaption>Iteration 2</figcaption>
+                    </figure>
+                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="1" style="flex:100%"><img src="image/pearl-iteration-2.png">
+                        <figcaption>Iteration 3</figcaption>
+                    </figure>
+                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="2" style="flex:100%"><img src="image/pearl-iteration-3.png">
+                        <figcaption>Iteration 4</figcaption>
+                    </figure>
+                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="3" style="flex:100%"><img src="image/pearl-iteration-4.png">
+                        <figcaption>Iteration 5</figcaption>
+                    </figure>
+                    <figure class="fragment no-transition-delay fade-in-then-out" data-fragment-index="4" style="flex:100%"><img src="image/pearl-iteration-5.png">
+                        <figcaption>Iteration 6</figcaption>
+                    </figure>
+                </div>
+                </div>
+            </section>
+            <section>
+                <h3>Constrained PEARL</h3>
+                <!--                TODO: show example of bad PEARL fit in scattering reaction-->
+<!--                TODO: we introduce correlations (constraints) between labels-->
+                <ul>
+                    <li>GCO to compute new labelling</li>
+                    <li>SciPy to perform constrained optimisation</li>
+                    <li>Jax to evaluate Jacobian + Hessian</li>
+                </ul>
+                <aside class="notes">
+<!--                    <p>In the subsequent examples, I'm going to show data from an elastic scattering reaction.-->
+<!--                        In these events, it is not uncommon for the carbon scatter to stop close to the interaction-->
+<!--                        vertex, such that there are not enough inliers to support the introduction of a new model.</p>-->
+<!--                    <p>We do not want the minimizer to treat these as inliers of another model. It will be able to do-->
+<!--                        this in the extreme cases with an outlier model, but compatible models may be skewed in order to-->
+<!--                        prevent these observations from becoming outliers.</p>-->
+                    <p>The problem is that we have too low level a description of our model - whilst a scattering
+                        reaction can be decomposed into separate tracks, there are additional requirements that have to
+                        be met in order for three random directions to form a scatter.</p>
+<!--                    <p>We can introduce constraints during our optimisation step to restrict the fit to more physical-->
+<!--                        solutions. This hierarchical fit does not extend into the labelling phase. There are-->
+<!--                        heirarchical extensions of PEARL but that's off-topic!</p>-->
+                    <p>The following analysis looks like K-means, except we retain the label cost (only with an upper bound of labels)</p>
+                </aside>
+            </section>
         </section>
     </div>
 </div>
