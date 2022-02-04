@@ -106,20 +106,22 @@
                 <p>These methods are powerful<span class="fragment">, but suffer from <span
                         class="col-3">greediness</span></span></p>
                 <div class="r-stack">
-                    <img class="fragment" src="https://placekitten.com/450/300" width="450" height="300"> <!-- TODO -->
-                    <img class="fragment" src="https://placekitten.com/300/450" width="300" height="450"> <!-- TODO -->
-                    <img class="fragment" src="https://placekitten.com/400/400" width="400" height="400"> <!-- TODO -->
+                    <img class="fragment" src="image/ransac-0.png">
+                    <img class="fragment" src="image/ransac-1.png">
+                    <img class="fragment" src="image/ransac-2.png">
                 </div>
 
                 <aside class="notes">
                     <p>The aforementioned RANSAC and Hough Transform methods are both intrinsically greedy. In order to
                         generalise to multiple models, these methods are usually performed iteratively until a
                         termination criterion (e.g. number of inliers) is met. </p>
-                    <p>Here is an example of RANSAC being performed iteratively.
+                    <p>Here is an example of RANSAC being performed recursively.
                         It can be seen that the set of inliers found by RANSAC includes a mix of points from both
                         models. There are several points which admit multiple models</p>
                     <p>The iterative algorithm maximises the inliers for the first model found. As such, the found
                         models are not treated on an equal basis.</p>
+                    <p>The Hough transform similar can be used with mean-shift clustering methods in parameter space to
+                        identify multiple models</p>
                 </aside>
             </section>
         </section>
@@ -299,6 +301,16 @@
                              data-fragment-index="4">
 
 
+                        <img src="image/cost-energy-6.png"
+                             class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                             data-fragment-index="5">
+
+
+                        <img src="image/cost-energy-7.png"
+                             class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                             data-fragment-index="6">
+
+
                     </div>
 
                     <div class="r-stack w-1/2">
@@ -330,6 +342,16 @@
                              class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
                              data-fragment-index="4">
 
+
+                        <img src="image/pearl-iteration-6.png"
+                             class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                             data-fragment-index="5">
+
+
+                        <img src="image/pearl-iteration-7.png"
+                             class="fragment no-transition-delay fade-in-then-out flex-1 w-full "
+                             data-fragment-index="6">
+
                     </div>
                 </div>
                 <div class="r-stack">
@@ -351,35 +373,53 @@
                     <figcaption class="fragment no-transition-delay fade-in-then-out" data-fragment-index="4">Iteration
                         6
                     </figcaption>
-
+                    <figcaption class="fragment no-transition-delay fade-in-then-out" data-fragment-index="5">Iteration
+                        7
+                    </figcaption>
+                    <figcaption class="fragment no-transition-delay fade-in-then-out" data-fragment-index="6">Iteration
+                        8
+                    </figcaption>
                 </div>
-            </section>
-            <section>
-                <h3>Constrained PEARL</h3>
-                <!--                TODO: show example of bad PEARL fit in scattering reaction-->
-                <!--                TODO: we introduce correlations (constraints) between labels-->
-                <ul>
-                    <li>GCO to compute new labelling</li>
-                    <li>SciPy to perform constrained optimisation</li>
-                    <li>Jax to evaluate Jacobian + Hessian</li>
-                </ul>
+
                 <aside class="notes">
-                    <!--                    <p>In the subsequent examples, I'm going to show data from an elastic scattering reaction.-->
-                    <!--                        In these events, it is not uncommon for the carbon scatter to stop close to the interaction-->
-                    <!--                        vertex, such that there are not enough inliers to support the introduction of a new model.</p>-->
-                    <!--                    <p>We do not want the minimizer to treat these as inliers of another model. It will be able to do-->
-                    <!--                        this in the extreme cases with an outlier model, but compatible models may be skewed in order to-->
-                    <!--                        prevent these observations from becoming outliers.</p>-->
-                    <p>The problem is that we have too low level a description of our model - whilst a scattering
-                        reaction can be decomposed into separate tracks, there are additional requirements that have to
-                        be met in order for three random directions to form a scatter.</p>
-                    <!--                    <p>We can introduce constraints during our optimisation step to restrict the fit to more physical-->
-                    <!--                        solutions. This hierarchical fit does not extend into the labelling phase. There are-->
-                    <!--                        heirarchical extensions of PEARL but that's off-topic!</p>-->
-                    <p>The following analysis looks like K-means, except we retain the label cost (only with an upper
-                        bound of labels)</p>
+                    <p>
+                        Graph cuts deal with segmentation into regions - representing the data-set as a graph, such that
+                        smooth costs are used to weight edges. The min-cut max-flow algorithm reduces interaction costs
+                        between adjacent regions
+                    </p>
+                    <p>
+                        There are greedy algorithms for the pure UFL, where the algorithm starts from an
+                        empty set of facilities (labels) and greedily introduces one facility at a time until no
+                        facility would decrease the overall cost.
+                    </p>
                 </aside>
             </section>
+        </section>
+        <section>
+            <h2>Useful Software</h2>
+            <div class="flex flex-column">
+                <figure class="fragment">
+                    <img src="image/awkward-array.png" class="h-40 mx-auto">
+                    <figcaption class="text-3xl">
+                        <p>TPC data is often <span class="col-3">jagged</span>.</p>
+                        <p><span class="col-1">Awkward Array</span>
+                            facilitates performant, expressive analyses.</p>
+                    </figcaption>
+                </figure>
+                <figure class="fragment">
+                    <img src="image/jax.png" class="h-40 mx-auto">
+                    <figcaption class="text-3xl"><p>Probabilistic analyses require <span class="col-3">covariance computation</span>.
+                    </p>
+                        <p><span class="col-2">JAX</span> provides exact gradients.</p>
+                    </figcaption>
+
+                </figure>
+                <figure class="fragment">
+                    <img src="image/scikit-hep.png" class="h-40 mx-auto">
+                    <figcaption class="text-3xl"><p>Ecosystem for Particle Physics data analysis in Python.</p>
+                    </figcaption>
+                </figure>
+            </div>
         </section>
     </div>
 </div>
